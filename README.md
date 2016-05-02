@@ -1,4 +1,4 @@
-# hoerdat
+# node-hoerdat
 
 An **experimental and very early alpha** node module for accessing the [Hördat](http://www.xn--hrdat-jua.de/) database of radio plays. There is no official API, so this module uses web scraping. Also, the Hördat backend oftentimes has very high latency. So be warned.
 
