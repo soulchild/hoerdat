@@ -101,7 +101,7 @@ function _request(method, url, formData) {
   });
 }
 
-Hoerdat.query = function query(attributes) {
+function buildQueryAttributes(attributes) {
   // Build query attributes object
   let queryAttributes = {
     bool8: 'and',
@@ -116,15 +116,43 @@ Hoerdat.query = function query(attributes) {
     soo: 'asc',
     dat: ''    
   };
+
   Object.keys(attributes).forEach(function(key, index) {
     if (index > 2) throw new Error('Too many search attributes (maximum 3)');
-    queryAttributes['col' + (index + 1)] = queryAttributeMap[key];
-    queryAttributes['bool' + (index + 1)] = 'and';
-    let valueKey = String.fromCharCode(97 + index);
+
+    // First three query attributes must be of form:
+    // col1=attribute&bool1=and&a=value
+    // col2=attribute&bool1=and&b=value
+    // col3=attribute&bool1=and&c=value
+    let queryAttribute = queryAttributeMap[key];
+    if (! queryAttribute) {
+      throw new Error(
+        'Invalid query attribute: ' + key + '. ' + 
+        'Valid options are: ' + Object.keys(queryAttributeMap).join(',')
+        );
+    }
+    queryAttributes['col' + (index + 1)] = queryAttribute;
+    queryAttributes['bool' + (index + 1)] = 'and';            // always joined by 'and' for now
+    let valueKey = String.fromCharCode(97 + index);           // a, b, c
     queryAttributes[valueKey] = "%" + attributes[key] + "%";
   });
 
+  return queryAttributes;
+}
+
+Hoerdat.query = function query(attributes) {
+  let queryAttributes = {};
+  try {
+    queryAttributes = buildQueryAttributes(attributes);
+  } catch(err) {
+    return Promise.reject(err);
+  }
+
   return _request('post', '/index.php', queryAttributes).then(function($) {
+    if (/formulieren Sie Ihre Anfrage bitte etwas genauer/.test($.html())) {
+      throw new Error('Query returned too many results (> 100). Please be more specific.');
+    }
+
     let entries = [];
 
     $('h1#pagetitle').nextAll('table').each(function(index, element) {
@@ -146,6 +174,7 @@ Hoerdat.query = function query(attributes) {
           }
         }
       });
+
       entries.push(attributes);
     });
 

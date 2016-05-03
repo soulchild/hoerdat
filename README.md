@@ -1,4 +1,4 @@
-# node-hoerdat
+# hoerdat
 
 An **experimental and very early alpha** node module for accessing the [Hördat](http://www.xn--hrdat-jua.de/) database of radio plays. There is no official API, so this module uses web scraping. Also, the Hördat backend oftentimes has very high latency. So be warned.
 
@@ -25,18 +25,8 @@ The following query attributes are supported. All attributes are joined with an 
 
 ## Example
 
-```js
-"use strict";
+Use the provided example script to give it a try:
 
-const Hoerdat = require('./index');
-
-Hoerdat.query({
-  title: 'Jim Knopf',
-  authorFirstname: 'Michael',
-  authorName: 'Ende'
-}).then(function(res) {
-  console.log(JSON.stringify(res, null, 2));
-}).catch(function(err) {
-  console.error(err);
-});
+```bash
+hoerdat title="Knopf" authorName="Ende" authorFirstname="Michael"
 ```
