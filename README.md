@@ -1,10 +1,14 @@
 # hoerdat
 
-An **experimental and very early alpha** node module for accessing the [Hördat](http://www.xn--hrdat-jua.de/) database of radio plays. There is no official API, so this module uses web scraping. Also, the Hördat backend oftentimes has very high latency. So be warned.
+> An **experimental and very early alpha** node module for accessing the [Hördat](http://www.xn--hrdat-jua.de/) database of radio plays. There is no official API, so this module uses web scraping. Note that the Hördat backend oftentimes has **very high latency**.
 
 ## Installation
 
-Due to its alpha state this module is currently not (yet) available via npm.
+Due to its alpha state this module is currently not (yet) available via npm, so you need to clone the Github repo.
+
+```bash
+npm install
+```
 
 ## Querying
 
@@ -28,5 +32,9 @@ The following query attributes are supported. All attributes are joined with an 
 Use the provided example script to give it a try:
 
 ```bash
-hoerdat title="Knopf" authorName="Ende" authorFirstname="Michael"
+bin/hoerdat title="Knopf" authorName="Ende" authorFirstname="Michael"
 ```
+
+## Author
+
+[Tobi Kremer](https://github.com/soulchild)
