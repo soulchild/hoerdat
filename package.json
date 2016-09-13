@@ -1,6 +1,6 @@
 {
   "name": "hoerdat",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node module for accessing the Hördat database of radio plays",
   "main": "index.js",
   "scripts": {
