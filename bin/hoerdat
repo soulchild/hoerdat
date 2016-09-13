@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const path = require('path');
+const Hoerdat = require('../lib/index');
+
+const args = process.argv.slice(2);
+if (args.length === 0) {
+  usage();
+}
+
+// Parse attributes into object
+const attributes = args.reduce((prev, cur, index) => {
+  const [attr, value] = cur.split('=');
+  prev[attr] = value
+  return prev;
+}, {});
+
+Hoerdat.query(attributes).then(res => {
+  console.log(JSON.stringify(res, null, 2));
+}).catch(err => {
+  console.error(err);
+});
+
+function usage() {
+  const scriptName = path.basename(process.argv[1]);
+  console.log("Usage:\n\t%s [attribute=value] [attribute=value] [...]", scriptName);
+  console.log("\nExample:\n\t%s title=\"Jim Knopf\"", scriptName);
+  console.log("\nAvailable attributes:\n\t" + Hoerdat.QUERY_ATTRIBUTES.join("\n\t"));
+  process.exit(1);
+}
