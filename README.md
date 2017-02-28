@@ -32,7 +32,7 @@ The following query attributes are supported. All attributes are joined with an 
 Use the provided example script to give it a try:
 
 ```bash
-bin/hoerdat title="Knopf" authorName="Ende" authorFirstname="Michael"
+bin/hoerdat search title="Knopf" authorName="Ende" authorFirstname="Michael"
 ```
 
 ## Author
