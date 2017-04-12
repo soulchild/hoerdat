@@ -1,51 +1,52 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const Hoerdat = require('../lib/index');
-const moment = require('moment');
+const path = require('path')
+const Hoerdat = require('../lib/index')
+const moment = require('moment')
 
-function usage() {
-  const scriptName = path.basename(process.argv[1]);
-  console.log("Usage:\n\t%s [command] [attribute=value] [attribute=value] [...]", scriptName);
-  console.log("\nExamples:\n",
-    `\t${scriptName} search title=\"Jim Knopf\"\n`,
+const hoerdat = new Hoerdat()
+
+const usage = () => {
+  const scriptName = path.basename(process.argv[1])
+  console.log('Usage:\n\t%s [command] [attribute=value] [attribute=value] [...]', scriptName)
+  console.log('\nExamples:\n',
+    `\t${scriptName} search title="Jim Knopf"\n`,
     `\t${scriptName} onair 2016-12-16`
-  );
-  console.log("\nCommands:\n",
-    "\tsearch:\tSearch radio plays by attributes\n",
-    "\tonair:\tRadio plays on air at given date\n"
-  );
-  console.log("Search attributes:\n\t" + Hoerdat.QUERY_ATTRIBUTES.join("\n\t"));
+  )
+  console.log('\nCommands:\n',
+    '\tsearch:\tSearch radio plays by attributes\n',
+    '\tonair:\tRadio plays on air at given date\n'
+  )
+  console.log('Search attributes:\n\t' + Hoerdat.QUERY_ATTRIBUTES.join('\n\t'))
 }
 
 const search = (attrs) => {
   // Parse attributes into object
   const attributes = attrs.reduce((prev, cur) => {
-    const [attr, value] = cur.split('=');
+    const [attr, value] = cur.split('=')
     return Object.assign(prev, {
       [attr]: value
-    });
-  }, {});
+    })
+  }, {})
 
-  return Hoerdat.query(attributes);
-};
-const onAir = (date) => Hoerdat.onAir(moment(date));
-
-const commands = {
-  'search': search,
-  'onair': onAir,
-};
-
-const args = process.argv.slice(2);
-const command = (args[0] || '').toLowerCase();
-const action = commands[command];
-if (!action) {
-    usage();
-    process.exit(1);
+  return hoerdat.search(attributes)
 }
 
-action(args.slice(1)).then(res => {
-  console.log(JSON.stringify(res, null, 2));
-}).catch(err => {
-  console.error(err);
-});
+const onAir = (date) => hoerdat.onAir(moment(date))
+
+const commands = {
+  search,
+  onAir
+}
+
+const args = process.argv.slice(2)
+const command = (args[0] || '').toLowerCase()
+const action = commands[command]
+if (!action) {
+  usage()
+  process.exit(1)
+}
+
+action(args.slice(1))
+  .then(res => console.log(JSON.stringify(res, null, 2)))
+  .catch(console.error)
